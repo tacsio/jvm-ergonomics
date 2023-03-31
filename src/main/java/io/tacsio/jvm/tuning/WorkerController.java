@@ -1,5 +1,10 @@
 package io.tacsio.jvm.tuning;
 
+import static java.math.BigInteger.ONE;
+
+import java.math.BigInteger;
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigInteger;
-import java.util.Random;
-
-import static java.math.BigInteger.ONE;
 
 @RestController
 @RequestMapping("/work")
@@ -25,14 +25,14 @@ public class WorkerController {
     }
 
     @GetMapping("/fact/{val}")
-    public ResponseEntity work(@PathVariable int val) {
+    public ResponseEntity<?> work(@PathVariable int val) {
         var result = workService.factorial(val);
 
         return ResponseEntity.ok("%s digits".formatted(result.toString().length()));
     }
 
     @GetMapping("/cpu")
-    public ResponseEntity cpu() {
+    public ResponseEntity<?> cpu() {
         workService.cpu();
         return ResponseEntity.ok("finished");
     }

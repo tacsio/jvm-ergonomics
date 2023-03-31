@@ -1,19 +1,19 @@
 package io.tacsio.jvm.tuning;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryManagerMXBean;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 public final class InfoController {
 
     @GetMapping("/info")
-    public ResponseEntity info() {
+    public ResponseEntity<?> info() {
         var response = new HashMap<>();
 
         var runtimeMXBean = ManagementFactory.getRuntimeMXBean();

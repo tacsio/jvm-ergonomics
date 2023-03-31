@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jvm-ergonomics
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: jvm-ergonomics
+  template:
+    metadata:
+      labels:
+        app: jvm-ergonomics
+    spec:
+      containers:
+        - name: jvm-ergonomics
+          image: jvm-ergonomic:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: ""
+              # value: "-XX:MaxRAMPercentage=75"
+              # value: ""
+              # value: ""
+          resources:
+            # requests:
+            #   memory: "128Mi"
+            #   cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jvm-ergonomics
+spec:
+  selector:
+    app: jvm-ergonomics
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 31000

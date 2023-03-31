@@ -15,8 +15,6 @@
 #export JAVA_TOOL_OPTIONS="-XX:ActiveProcessorCount=1"
 #export JAVA_TOOL_OPTIONS="-XX:ActiveProcessorCount=2"
 
-### [TESTS] ###################################################################################
-#export JAVA_TOOL_OPTIONS=""
 
 
 ### [INFO] #####################################################################################
