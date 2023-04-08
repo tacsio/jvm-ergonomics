@@ -1,13 +1,14 @@
 package io.tacsio.jvm.tuning;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryManagerMXBean;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public final class InfoController {
@@ -22,11 +23,21 @@ public final class InfoController {
         var osMXBean = ManagementFactory.getOperatingSystemMXBean();
         var hulkOsMXBean = (com.sun.management.OperatingSystemMXBean) osMXBean;
 
+//        gcMXBeans.stream().forEach(gc -> {
+//            System.out.println("""
+//                    gc: %s
+//                    count: %s
+//                    """.formatted(gc.getName(), gc.getCollectionCount()));
+//        });
+
         response.put("pid", runtimeMXBean.getPid());
         response.put("jvmArgs", runtimeMXBean.getInputArguments());
         response.put("availableProcessors", osMXBean.getAvailableProcessors());
         response.put("cpu", hulkOsMXBean.getCpuLoad() * 100);
-        response.put("gc", gcMXBeans.stream().map(MemoryManagerMXBean::getName));
+        response.put("gc", Map.of(
+                "type", gcMXBeans.stream().map(MemoryManagerMXBean::getName),
+                "executions", gcMXBeans.stream().map(GarbageCollectorMXBean::getCollectionCount).reduce(0L, Long::sum)
+        ));
 
         response.put("memory", Map.of(
                 "OsFreeMemory", bytesToMBString(hulkOsMXBean.getFreeMemorySize()),
